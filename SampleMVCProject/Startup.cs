@@ -3,17 +3,13 @@
 // This file will need updated according to the specific scenario of the application being upgraded.
 // For more information on ASP.NET Core startup files, see https://docs.microsoft.com/aspnet/core/fundamentals/startup
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SampleMVCProject.Middlewares;
 
 namespace SampleMVCProject
 {
@@ -52,6 +48,7 @@ namespace SampleMVCProject
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+            app.MapWhen(context => context.Request.Path.ToString().EndsWith(".report"), x => x.UseTestHttpMiddleware());
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -61,7 +58,7 @@ namespace SampleMVCProject
         }
 
         private void ConfigureMvcOptions(MvcOptions mvcOptions)
-        { 
+        {
         }
     }
 }
